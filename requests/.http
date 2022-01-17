@@ -1,5 +1,7 @@
 @api = http://localhost:3000
-GET {{api}}/validated
-Authorization: 
+@authorization = ?accessToken=
+GET{{api}}/validated
+###
+GET {{api}}/validated{{authorization}}
 ###
 GET {{api}}/generateToken

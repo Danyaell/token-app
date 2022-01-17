@@ -2,7 +2,7 @@
 
 To run the app you'll need to type:
 
-###### npm i expres jsonwebtoken dotenv
+###### npm i expres jsonwebtoken dotenv cookie-parser
 
 ### index.js
 
