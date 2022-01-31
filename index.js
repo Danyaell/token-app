@@ -1,25 +1,27 @@
 const express = require('express');
-const app = express();
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const app = express();
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+app.use(cors());
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(cookieParser());
 
+// Routes
 app.get('/', (req, res) => {
     res.send('Hi. I am listening...');
 });
-app.listen(3000, () => {
-    console.log('Server started on localhost:3000 \nHi! i am listening...');
+app.listen(3030, () => {
+    console.log('Server started on localhost:3030 \nHi! i am listening...');
 });
 
 app.get('/generateToken', (req, res) => {
     const accessToken = generateAccessToken();
     console.log(`Authenticated with token: ${accessToken}`);
-    res.cookie('authorization', accessToken).send('Authenticated!');
-
+    res.send(accessToken);
 });
 
 app.get('/validated', validateToken, (req, res) => {
@@ -40,12 +42,12 @@ function generateAccessToken() {
  * expired or incorrect. If its correct, we send a 200 status code and clear the cookie.
  */
 function validateToken(req, res) {
-    const accessToken = res.cookie.authorization || req.query.accessToken;
+    const accessToken = req.query.accessToken;
 
     jwt.verify(accessToken, process.env.SECRET_WORD, (err) => {
-        if(err || !accessToken || !req.cookies.authorization) {
+        if(err || !accessToken) {
             console.log('Access denied, token expired or incorrect.');
-            res.status(401).send('Access denied, token expired or incorrect.');
+            res.send(401);
         } else {
             console.log('Validated!');
             res.clearCookie('authorization').send('Validated!');
